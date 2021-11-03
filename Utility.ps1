@@ -8,3 +8,14 @@ $Session = New-PSSession -ComputerName <ComputerNane or IP> -Credential "Study\A
 Copy-Item "C:\Users\Administrator\Desktop\Sysmon\*.*" -ToSession $Session -Destination C:\Windows\cpsysmon\  -Recurse
 
 Invoke-Command -Session $session -ScriptBlock {cmd.exe /C "c:\windows\cpsysmon\Sysmon64.exe" -i -n -accepteula}
+
+
+
+
+@echo off
+Psexec.exe -sd \\%1 procmon -accepteula -backingfile c:\temp\proc.pml -quiet
+Pause
+Psexec.exe -sd \\%1 procmon -accepteula -terminate -quiet
+Xcopy \\%1\c$\temp\proc.pml c:\temp\
+Del \\%1\c$\temp\proc.pml
+Procmon.exe /openlog c:\temp\proc.pm
