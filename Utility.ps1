@@ -19,3 +19,8 @@ Psexec.exe -sd \\%1 procmon -accepteula -terminate -quiet
 Xcopy \\%1\c$\temp\proc.pml c:\temp\
 Del \\%1\c$\temp\proc.pml
 Procmon.exe /openlog c:\temp\proc.pm
+
+
+# Backup Event Log
+(Get-WmiObject -Class Win32_NTEventlogFile | Where-Object LogfileName -EQ 'System').BackupEventlog('C:\Temp\System.evtx')
+(Get-WmiObject -Class Win32_NTEventlogFile | Where-Object LogfileName -EQ 'Application').BackupEventlog('C:\Temp\Application.evtx')
