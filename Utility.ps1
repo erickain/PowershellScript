@@ -24,3 +24,6 @@ Procmon.exe /openlog c:\temp\proc.pm
 # Backup Event Log
 (Get-WmiObject -Class Win32_NTEventlogFile | Where-Object LogfileName -EQ 'System').BackupEventlog('C:\Temp\System.evtx')
 (Get-WmiObject -Class Win32_NTEventlogFile | Where-Object LogfileName -EQ 'Application').BackupEventlog('C:\Temp\Application.evtx')
+
+# Navigate the windows event log tree
+WEVTUtil query-events "Microsoft-Windows-GroupPolicy/Operational" /format:xml /e:sysmonview > eventlog.xml
