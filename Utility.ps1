@@ -27,3 +27,8 @@ Procmon.exe /openlog c:\temp\proc.pm
 
 # Navigate the windows event log tree
 WEVTUtil query-events "Microsoft-Windows-GroupPolicy/Operational" /format:xml /e:sysmonview > eventlog.xml
+
+#SMB1
+Get-WindowsOptionalFeature -Online -FeatureName SMB1Protocol #Detect
+Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol  #Disable
+Enable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol  #Enable
