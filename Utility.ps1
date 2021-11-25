@@ -32,3 +32,6 @@ WEVTUtil query-events "Microsoft-Windows-GroupPolicy/Operational" /format:xml /e
 Get-WindowsOptionalFeature -Online -FeatureName SMB1Protocol #Detect
 Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol  #Disable
 Enable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol  #Enable
+
+# Get server uptime
+(get-date) - (gcim Win32_OperatingSystem).LastBootUpTime
