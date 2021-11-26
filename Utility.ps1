@@ -34,4 +34,14 @@ Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol  #Disable
 Enable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol  #Enable
 
 # Get server uptime
-(get-date) - (gcim Win32_OperatingSystem).LastBootUpTime
+(get-date) - (gcim Win32_OperatingSystem).LastBootUpTime  
+
+    #Renew  cert of the RDS WebClient
+Install-RDWebClientPackage
+Import-RDWebClientBrokerCert <.cer path file path base64 or not> 
+
+    #Optionally, you can publish the client for testing before official release by running this cmdlet
+Publish-RDWebClientPackage -Type Test -Latest
+
+Publish-RDWebClientPackage -Type Production -Latest
+
