@@ -1,5 +1,9 @@
 #Install Sysmon Remotely
 
+
+# run poweershell command remotely withoug powershell remoting 
+.\psexec.exe \\ComputerName powershell  "Powershell_command"
+
 #Enable powershell remoting uisng psxec
  .\psexec.exe \\ComputerName -h -s powershell.exe Enable-PSRemoting -Force
 
