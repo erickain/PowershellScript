@@ -1,3 +1,10 @@
+
+Get a list of all non-Windows servers that have not contacted Active Directory in the last 30 days
+
+Get-ADComputer -Filter { OperatingSystem -notlike "Windows Server*" } -Properties PasswordLastSet | ? { (((Get-Date) – $_.PasswordLastSet).Days) -gt 30} | Select Name, @{N="Age";E={ (((Get-Date) – $_.PasswordLastSet).Days) }}
+
+# send text message https://www.alexcomputerbubble.com/use-powershell-to-send-a-text-message-sms/
+
 #Install Sysmon Remotely
 
 
@@ -39,6 +46,7 @@ Enable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol  #Enable
 
 # Get server uptime
 (get-date) - (gcim Win32_OperatingSystem).LastBootUpTime  
+Get-Uptime -Since
 
     #Renew  cert of the RDS WebClient
 Install-RDWebClientPackage
@@ -49,3 +57,13 @@ Publish-RDWebClientPackage -Type Test -Latest
 
 Publish-RDWebClientPackage -Type Production -Latest
 
+#Enable TLS 1.2  support
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+
+# Get your PUblic IP 
+(Invoke-RestMethod ipinfo.io/json).ip
+
+#Get Powershell version
+Get-Host | Select Version
+#Send email 
+Send-MailMessage -From 'bob@outlook.com' -To 'sam@outlook.com', 'john@outlook.com' -Subject 'Bob CV' -Body 'Here is my CV' -Attachments .\cv.pdf -Priority High -DeliveryNotificationOption OnSuccess, OnFailure -SmtpServer 'smtp-mail.outlook.com' -port 587 -UseSsl
