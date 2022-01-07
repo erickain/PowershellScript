@@ -5,8 +5,11 @@ Get-ADComputer -Filter { OperatingSystem -notlike "Windows Server*" } -Propertie
 
 # send text message https://www.alexcomputerbubble.com/use-powershell-to-send-a-text-message-sms/
 
-#Install Sysmon Remotely
+# Port Scanner 
+0..65535 | Foreach-Object { Test-NetConnection -Port $_ scanme.nmap.org -WA SilentlyContinue | Format-Table -Property ComputerName,RemoteAddress,RemotePort,TcpTestSucceeded }
 
+
+#Install Sysmon Remotely
 
 # run poweershell command remotely withoug powershell remoting 
 .\psexec.exe \\ComputerName powershell  "Powershell_command"
@@ -65,5 +68,17 @@ Publish-RDWebClientPackage -Type Production -Latest
 
 #Get Powershell version
 Get-Host | Select Version
+
 #Send email 
 Send-MailMessage -From 'bob@outlook.com' -To 'sam@outlook.com', 'john@outlook.com' -Subject 'Bob CV' -Body 'Here is my CV' -Attachments .\cv.pdf -Priority High -DeliveryNotificationOption OnSuccess, OnFailure -SmtpServer 'smtp-mail.outlook.com' -port 587 -UseSsl
+$sendMailParams = @{
+    From = 'adbertram@gmail.com' ## Must be gmail.com
+    To = 'someemail@domain.com'
+    Subject = 'some subject'
+    Body = 'some body'
+    SMTPServer = 'smtp.gmail.com'
+    SMTPPort = 587
+    UseSsl = $true
+    Credential = $gmailCred
+}
+Send-MailMessage @sendMailParams
