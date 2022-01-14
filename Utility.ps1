@@ -1,3 +1,28 @@
+#Force deletion of an AD account which has leaf Object
+   # 1 - force inheritance 
+$users = Get-ADUser -ldapfilter “(objectclass=user)” -searchbase “ou=companyusers,dc=enterpriseit,dc=co”
+ForEach($user in $users)
+{
+    # Binding the users to DS
+    $ou = [ADSI](“LDAP://” + $user)
+    $sec = $ou.psbase.objectSecurity
+ 
+    if ($sec.get_AreAccessRulesProtected())
+    {
+        $isProtected = $false ## allows inheritance
+        $preserveInheritance = $true ## preserver inhreited rules
+        $sec.SetAccessRuleProtection($isProtected, $preserveInheritance)
+        $ou.psbase.commitchanges()
+        Write-Host “$user is now inherting permissions”;https://github.com/erickain/PowershellScript/blob/main/Utility.ps1
+    }
+    else
+    {
+        Write-Host “$User Inheritable Permission already set”
+    }
+}
+    # 2 - Delete object and leaf object
+Remove-ADobject (Get-ADUser olduser).distinguishedname -Recursive -Confirm:$false
+
 
 Get a list of all non-Windows servers that have not contacted Active Directory in the last 30 days
 
