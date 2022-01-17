@@ -107,3 +107,9 @@ $sendMailParams = @{
     Credential = $gmailCred
 }
 Send-MailMessage @sendMailParams
+
+
+#Query stopped services setup as auto 
+$computer = (Get-Item env:\Computername).Value
+#Start all non-running Auto services
+Get-WmiObject win32_service -ComputerName $computer -Filter "startmode = 'auto' AND state != 'running'"
