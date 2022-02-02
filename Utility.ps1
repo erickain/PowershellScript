@@ -1,3 +1,6 @@
+#Follow TXT file with PowerShell OGV(out-gridview) command
+get-content [path\to\textfile.txt] -wait | ogv
+
 #Force deletion of an AD account which has leaf Object
    # 1 - force inheritance 
 $users = Get-ADUser -ldapfilter “(objectclass=user)” -searchbase “ou=companyusers,dc=enterpriseit,dc=co”
