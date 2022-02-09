@@ -116,3 +116,11 @@ Send-MailMessage @sendMailParams
 $computer = (Get-Item env:\Computername).Value
 #Start all non-running Auto services
 Get-WmiObject win32_service -ComputerName $computer -Filter "startmode = 'auto' AND state != 'running'"
+
+
+- WIndows Activation
+$computer = gc env:computername
+$key = "aaaaa-bbbbb-ccccc-ddddd-eeeee"
+$service = get-wmiObject -query "select * from SoftwareLicensingService" -computername $computer
+$service.InstallProductKey($key)
+$service.RefreshLicenseStatus()
