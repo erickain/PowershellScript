@@ -124,3 +124,13 @@ $key = "aaaaa-bbbbb-ccccc-ddddd-eeeee"
 $service = get-wmiObject -query "select * from SoftwareLicensingService" -computername $computer
 $service.InstallProductKey($key)
 $service.RefreshLicenseStatus()
+
+
+# Start all Automatic Services that are currently stopped or not running using PowerShell
+$computer = (Get-Item env:\Computername).Value
+#Start all non-running Auto services
+Get-WmiObject win32_service -ComputerName $computer -Filter "startmode = 'auto' AND state != 'running' AND name != 'sppsvc'" | Invoke-WmiMethod -Name StartService
+
+#Output any services still not running
+$stoppedServices = Get-WmiObject win32_service -ComputerName $computer -Filter "startmode = 'auto' AND state != 'running' AND name != 'sppsvc'" | select -expand Name
+Write-Host "$env:ComputerName : Stopped Services: $stoppedServices"
