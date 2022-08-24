@@ -134,3 +134,7 @@ Get-WmiObject win32_service -ComputerName $computer -Filter "startmode = 'auto' 
 #Output any services still not running
 $stoppedServices = Get-WmiObject win32_service -ComputerName $computer -Filter "startmode = 'auto' AND state != 'running' AND name != 'sppsvc'" | select -expand Name
 Write-Host "$env:ComputerName : Stopped Services: $stoppedServices"
+
+# Change power mode 
+$p = Get-CimInstance -Name root\cimv2\power -Class win32_PowerPlan -Filter "ElementName = 'High Performance'"      
+powercfg /setactive ([string]$p.InstanceID).Replace("Microsoft:PowerPlan\{","").Replace("}","")
