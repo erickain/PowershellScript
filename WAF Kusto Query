@@ -1,0 +1,81 @@
+
+- Error 
+AzureDiagnostics| where ResourceProvider == "MICROSOFT.NETWORK" and Category == "ApplicationGatewayAccessLog"| where httpStatus_d > 500
+
+- Invesigate time-out 
+AzureDiagnostics
+| where Category == "ApplicationGatewayAccessLog"
+| where host_s == "website dns name"
+| where httpStatus_d == "504"
+| sort by timeTaken_d
+
+-Blocked Request
+AzureDiagnostics 
+| where ResourceProvider == "MICROSOFT.NETWORK" and Category == "ApplicationGatewayFirewallLog"
+| where action_s =="Blocked"
+
+
+AzureDiagnostics
+| where Category == "ApplicationGatewayFirewallLog"
+| where hostname_s == "hifissk.ca"
+| where action_s == "Blocked"
+| where ruleId_s <> "AllowOnlyCanada"
+
+AzureDiagnostics
+| where Category == "ApplicationGatewayFirewallLog"
+| where hostname_s == "hifissk.ca"
+| where action_s == "Matched"
+| where ruleId_s == 942390
+
+
+
+Use-Case: List log entries for a dedicated hostname. I exclude entries which refer to rules you cannot disable to reduce the results which do not help. [last updated 26.03.2021]
+
+AzureDiagnostics
+| where Category == "ApplicationGatewayFirewallLog"
+| where Message !contains "Mandatory rule. Cannot be disabled."
+| where hostname_s == "your-hostname.com"
+| sort by TimeGenerated
+
+
+Use-Case: List log entries for a dedicated hostname summarized by the OWASP Rule ID. I exclude entries which refer to rules you cannot disable to reduce the results which do not help. [last updated 26.03.2021]
+
+AzureDiagnostics
+| where Category == "ApplicationGatewayFirewallLog"
+| where Message !contains "Mandatory rule. Cannot be disabled."
+| where hostname_s == "your-hostname.com"
+| summarize by ruleId_s
+
+
+Use-Case: Create an access view for all hosts based on 30 minutes intervals. [last updated 26.03.2021]
+
+AzureDiagnostics
+| where Category == "ApplicationGatewayAccessLog"
+//| where host_s == "your-hostname.com"
+| summarize count() by host_s, bin(TimeGenerated, 30m)
+| render timechart
+
+Use-Case: Create an access view for a dedicated API or URI of a host based on 30 minutes intervals. [last updated 26.03.2021]
+
+AzureDiagnostics
+| where Category == "ApplicationGatewayAccessLog"
+| where requestUri_s == "/your-uri"
+| summarize count() by requestUri_s, bin(TimeGenerated, 30m)
+| render timechart
+
+
+Use-Case: Get HTTP status codes for a dedicated host. [last updated 26.03.2021]
+
+AzureDiagnostics
+| where Category == "ApplicationGatewayAccessLog"
+| where host_s == "your-hostname.com"
+| summarize count() by httpStatus_d
+
+
+Use-Case: Search for a dedicated status code on a dedicated host. [last updated 26.03.2021]
+
+AzureDiagnostics
+| where Category == "ApplicationGatewayAccessLog"
+| where host_s == "your-hostname.com"
+| where httpStatus_d == ""
+| sort by TimeGenerated
