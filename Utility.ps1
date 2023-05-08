@@ -36,6 +36,8 @@ Get-ADComputer -Filter { OperatingSystem -notlike "Windows Server*" } -Propertie
 # Port Scanner 
 0..65535 | Foreach-Object { Test-NetConnection -Port $_ scanme.nmap.org -WA SilentlyContinue | Format-Table -Property ComputerName,RemoteAddress,RemotePort,TcpTestSucceeded }
 
+# Download psexec.exe
+Invoke-WebRequest -uri https://live.sysinternals.com/psexec.exe -OutFile .\psexec.exe
 
 #Install Sysmon Remotely
 
