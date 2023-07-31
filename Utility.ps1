@@ -140,3 +140,24 @@ Write-Host "$env:ComputerName : Stopped Services: $stoppedServices"
 # Change power mode 
 $p = Get-CimInstance -Name root\cimv2\power -Class win32_PowerPlan -Filter "ElementName = 'High Performance'"      
 powercfg /setactive ([string]$p.InstanceID).Replace("Microsoft:PowerPlan\{","").Replace("}","")
+
+### Manage  HyperV VM snapshot
+#Take Snapshot/Checkpoint
+Checkpoint-VM -Name Test -SnapshotName BeforeInstallingUpdates
+
+# Delete Snapshot
+Get-VM TestVM | Remove-VMSnapshot -Name Experiment*
+
+#List Snapshot 
+Get-VMSnapshot -VMName TestVM
+
+
+######## Manage AD  User password #########
+# Change a specified user's password
+Set-ADAccountPassword -Identity elisada -OldPassword (ConvertTo-SecureString -AsPlainText "p@ssw0rd" -Force) -NewPassword (ConvertTo-SecureString -AsPlainText "qwert@12345" -Force)
+
+# Set a password for a user account using a distinguished name
+Set-ADAccountPassword -Identity 'CN=Elisa Daugherty,OU=Accounts,DC=Fabrikam,DC=com' -Reset -NewPassword (ConvertTo-SecureString -AsPlainText "p@ssw0rd" -Force)
+
+# Change password at log on
+Set-ADUser -Identity worker03 -ChangePasswordAtLogon $true
