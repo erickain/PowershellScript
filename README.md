@@ -19,5 +19,8 @@ pktmon stop
 
 ## Convert etl to pcap for wireshark:
 
+#Create Directory where you want to store pcap
 mkdir C:\Temp1 # Create Directory where you want to store pcap
-pktmon etl2pcap C:\WINDOWS\system32\PktMon.etl -o C:\Temp1\log.pcapng #  Convert etltp log.pcapng for wireshark
+
+#Convert etltp log.pcapng for wireshark
+pktmon etl2pcap C:\WINDOWS\system32\PktMon.etl -o C:\Temp1\log.pcapng 
