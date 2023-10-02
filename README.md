@@ -13,7 +13,7 @@ pktmon start --etw --pkt-size 0 --comp 1
 
 pktmon start -c --comp nics -m real-time # Capture Real time
 
-##Stop Capture or Control C:
+## Stop Capture or Control C:
 
 pktmon stop
 
