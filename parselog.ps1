@@ -42,7 +42,7 @@ Get-WinEvent -FilterHashtable @{ LogName="Security"; ID=4624 } -MaxEvents 1 | Co
  
 #Filter
 Get-WinEvent -FilterHashtable @{ LogName="Security"; ID=4624 } -MaxEvents 1 | Convert-EventLogRecord | Select-Object -Property TargetUserName
-Get-WinEvent -FilterHashTable @{LogName="Security";ID=4625;StartTime=((Get-Date).AddDays(-1));EndTime=(Get-Date)} || Convert-EventLogRecord | Select-Object -Property TargetUserName
+Get-WinEvent -FilterHashTable @{LogName="Security";ID=4625;StartTime=((Get-Date).AddDays(-1));EndTime=(Get-Date)} | Convert-EventLogRecord | Select-Object -Property TargetUserName
 Get-WinEvent -FilterHashtable @{ LogName="Security"; ID=4624 } | Convert-EventLogRecord | Where-Object -Property TargetUserName -NE 'SYSTEM' | Select-Object TargetUsername, TimeCreated, LogonType
 
 #For better performance  Filter hash table first; Convert-EventLogRecord if you must
