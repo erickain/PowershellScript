@@ -1,5 +1,8 @@
 #Follow TXT file with PowerShell OGV(out-gridview) command
 get-content [path\to\textfile.txt] -wait | ogv
+# Get public IP of the server
+nslookup myip.opendns.com resolver1.opendns.com 
+Resolve-DnsName -Name myip.opendns.com -Server resolver1.opendns.com
 
 #Force deletion of an AD account which has leaf Object
    # 1 - force inheritance 
