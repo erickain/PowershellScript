@@ -42,6 +42,12 @@ Get-ADComputer -Filter { OperatingSystem -notlike "Windows Server*" } -Propertie
 # Download psexec.exe
 Invoke-WebRequest -uri https://live.sysinternals.com/psexec.exe -OutFile .\psexec.exe
 
+# Enable rdp remotely on english OS
+Invoke-Command -ComputerName $t -ScriptBlock {
+    Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0; `
+    Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+}
+
 #Install Sysmon Remotely
 
 # run poweershell command remotely withoug powershell remoting 
