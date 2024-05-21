@@ -45,7 +45,9 @@ Invoke-WebRequest -uri https://live.sysinternals.com/psexec.exe -OutFile .\psexe
 # Enable rdp remotely on english OS
 Invoke-Command -ComputerName $t -ScriptBlock {
     Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0; `
-    Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+    Enable-NetFirewallRule -DisplayGroup "Remote Desktop"`
+    # Disable Network Level Authentication (NLA) on the remote computer`
+    Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 0
 }
 
 #Install Sysmon Remotely
