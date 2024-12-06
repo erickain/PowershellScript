@@ -172,3 +172,40 @@ Set-ADAccountPassword -Identity 'CN=Elisa Daugherty,OU=Accounts,DC=Fabrikam,DC=c
 
 # Change password at log on
 Set-ADUser -Identity worker03 -ChangePasswordAtLogon $true
+
+
+### Clear adminCount and enable inheritance
+Get-ADUser -SearchBase "<SearchBase>" -Filter {
+    -not (SamAccountName -like "*-a") -and    
+    (Enabled -eq $true)
+} -Properties SamAccountName, Enabled, nTSecurityDescriptor, adminCount |
+Where-Object { $_.DistinguishedName -notlike "*serviceaccounts*" } |
+ForEach-Object {
+    $inheritanceEnabled = -not $_.nTSecurityDescriptor.AreAccessRulesProtected
+    $adminCountCleared = [string]::IsNullOrEmpty($_.adminCount)
+    $changes = @{}
+
+    if (-not $inheritanceEnabled) {
+        $_.nTSecurityDescriptor.SetAccessRuleProtection($false, $true)
+        $changes["nTSecurityDescriptor"] = $_.nTSecurityDescriptor
+        $inheritanceEnabled = $true
+        Write-Host "Enabled inheritance for user: $($_.SamAccountName)"
+    }
+
+    if (-not $adminCountCleared) {
+        $changes["adminCount"] = $null
+        $adminCountCleared = $true
+        Write-Host "Cleared adminCount for user: $($_.SamAccountName)"
+    }
+
+    if ($changes.Count -gt 0) {
+        Set-ADUser $_ -remove @{adminCount=1}
+
+    }
+
+    [PSCustomObject]@{
+        SamAccountName = $_.SamAccountName
+        InheritanceEnabled = $inheritanceEnabled
+        AdminCountCleared = $adminCountCleared
+    }
+}
